@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verificar número · Asfit</title>
+<meta name="description" content="Confira se o número que falou com você é da equipe da Agatha Sá.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F7F3E8">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preload" href="fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* Manual da marca da Asfit (Carol Guerra, 06/10/2026), igual à captação: Figtree 500 nos títulos e
+     300/400 no texto (a Mundial que temos é demo e sem acento), logo terracota no off-white. */
+  @font-face {
+    font-family: "Figtree";
+    src: url(fonts/figtree-latin.woff2) format("woff2");
+    font-weight: 300 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    --creme: #F7F3E8;
+    --creme-fundo: #EFE6D4;
+    --amarelo: #FEE179;
+    --terracota: #CA6839;
+    --vinho: #873A4A;
+    --marrom: #623B1E;
+    --marrom-apoio: #7A5A44;
+    --verde: #2F7A4B;
+    --mola: cubic-bezier(.34, 1.4, .64, 1);
+    --fonte: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body {
+    margin: 0; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column;
+    background: var(--creme); color: var(--marrom);
+    font-family: var(--fonte); font-weight: 400; font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { display: block; max-width: 100%; }
+  .ic { width: 1em; height: 1em; flex: none; fill: currentColor; }
+  [hidden] { display: none !important; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .pagina { width: min(520px, 100% - 32px); margin: 0 auto; padding: 40px 0 32px; flex: 1; }
+  .logo { width: 132px; height: auto; margin: 0 auto 30px; }
+  h1 {
+    margin: 0 0 26px; text-align: center; text-wrap: balance;
+    font-weight: 500; font-size: clamp(25px, 6.6vw, 31px); line-height: 1.16; letter-spacing: -.01em;
+  }
+
+  /* ===== Verificação ===== */
+  .verificar { display: grid; gap: 12px; }
+  .verificar input {
+    width: 100%; height: 60px; padding: 0 20px; border-radius: 18px;
+    border: 1.5px solid rgba(98, 59, 30, .28); background: #FFFDF8; color: var(--marrom);
+    font: 500 19px/1 var(--fonte); letter-spacing: .02em; text-align: center;
+    transition: border-color .18s ease, box-shadow .18s ease;
+  }
+  .verificar input::placeholder { color: rgba(98, 59, 30, .42); font-weight: 400; letter-spacing: 0; }
+  .verificar input:focus { outline: none; border-color: var(--vinho); box-shadow: 0 0 0 4px rgba(135, 58, 74, .14); }
+  .verificar input[aria-invalid="true"] { border-color: var(--terracota); }
+  .erro { min-height: 1.4em; margin: -4px 0 0; text-align: center; font-size: 14.5px; font-weight: 500; color: var(--terracota); }
+  .dica { margin: 2px 0 0; text-align: center; font-size: 14.5px; color: var(--marrom-apoio); }
+
+  .botao {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; min-height: 58px; padding: 0 28px; border: 0; border-radius: 999px;
+    background: var(--vinho); color: var(--creme);
+    font: 600 17px/1.2 var(--fonte); text-decoration: none; cursor: pointer;
+    box-shadow: 0 16px 30px -18px rgba(135, 58, 74, .95);
+    transition: transform .18s ease, background-color .18s ease;
+  }
+  .botao:hover { background: #7A3242; }
+  .botao:active { transform: scale(.97); }
+  .botao:focus-visible, .resultado__fechar:focus-visible { outline: 3px solid var(--terracota); outline-offset: 3px; }
+  .botao .ic { width: 20px; height: 20px; }
+  .botao--claro { background: transparent; color: var(--vinho); box-shadow: inset 0 0 0 1.5px currentColor; }
+  .botao--claro:hover { background: rgba(135, 58, 74, .07); }
+
+  /* ===== O que fazer ===== */
+  .ajuda { margin-top: 34px; padding: 24px 22px 22px; border-radius: 24px; background: var(--creme-fundo); }
+  .ajuda h2 { margin: 0 0 8px; font-weight: 500; font-size: 19px; line-height: 1.25; }
+  .ajuda p { margin: 0 0 18px; font-weight: 400; font-size: 15.5px; line-height: 1.5; color: var(--marrom-apoio); }
+  .ajuda strong { font-weight: 600; color: var(--vinho); }
+  .ajuda p:last-child { margin-bottom: 0; }
+
+  .rodape { padding: 0 16px 28px; text-align: center; font-size: 13.5px; color: var(--marrom-apoio); }
+  .rodape span + span::before { content: "·"; margin: 0 8px; }
+
+  /* ===== Resultado ===== */
+  .resultado { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 20px; }
+  .resultado[hidden] { display: none; }
+  .resultado__fundo { position: absolute; inset: 0; background: rgba(46, 28, 17, .55); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+  .resultado__caixa {
+    position: relative; width: min(100%, 400px); display: grid; justify-items: center; gap: 6px;
+    padding: 38px 24px 28px; border-radius: 28px; background: var(--creme); text-align: center;
+    box-shadow: 0 40px 80px -40px rgba(20, 6, 10, .9);
+  }
+  .resultado__fechar {
+    position: absolute; right: 10px; top: 10px; width: 44px; height: 44px; display: grid; place-items: center;
+    border: 0; border-radius: 50%; background: transparent; color: var(--marrom-apoio); cursor: pointer;
+  }
+  .resultado__fechar .ic { width: 22px; height: 22px; }
+  .resultado__icone { width: 64px; height: 64px; margin-bottom: 8px; fill: currentColor; }
+  .resultado h2 { margin: 0; font-weight: 500; font-size: 25px; line-height: 1.2; }
+  .resultado p { margin: 0; font-size: 16px; color: var(--marrom-apoio); }
+  .resultado__numero { margin-top: 8px !important; font-weight: 600; font-size: 15px !important; letter-spacing: .02em; color: var(--marrom) !important; }
+  .resultado .botao { margin-top: 16px; }
+  .resultado[data-estado="ok"] .resultado__icone { color: var(--verde); }
+  .resultado[data-estado="nao"] .resultado__icone, .resultado[data-estado="lista"] .resultado__icone { color: var(--terracota); }
+  @media (prefers-reduced-motion: no-preference) {
+    .resultado:not([hidden]) .resultado__caixa { animation: surge .42s var(--mola); }
+    .resultado:not([hidden]) .resultado__fundo { animation: some .25s ease reverse; }
+    @keyframes surge { from { opacity: 0; transform: translateY(16px) scale(.97); } }
+    @keyframes some { to { opacity: 0; } }
+  }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-arrow-right" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+  <symbol id="f-check-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+  <symbol id="f-x-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm37.66,130.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+  <symbol id="f-warning-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"/></symbol>
+  <symbol id="i-chat-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></symbol>
+</svg>
+
+<main class="pagina">
+  <img class="logo" src="img/logo-terracota.webp" alt="Asfit" width="480" height="100">
+  <h1>Verifique se o número que entrou em contato com você é da equipe da Agatha Sá</h1>
+
+  <form class="verificar" novalidate>
+    <label class="sr" for="numero">Número de telefone, com DDD</label>
+    <input id="numero" name="numero" type="tel" inputmode="tel" autocomplete="off" placeholder="Cole ou digite o número com DDD" aria-describedby="erro dica">
+    <p class="erro" id="erro" aria-live="polite"></p>
+    <button class="botao" type="submit"><span>Verificar agora</span><svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+    <p class="dica" id="dica">Pode colar do jeito que aparece no WhatsApp, com +55 e tudo.</p>
+  </form>
+
+  <section class="ajuda" aria-labelledby="titulo-ajuda">
+    <h2 id="titulo-ajuda">O que fazer se o número não for verificado?</h2>
+    <p data-com-suporte>Primeiro passo, <strong>bloqueie o número no seu WhatsApp</strong>. Depois, toque no botão abaixo e fale com o nosso suporte pra gente tomar as medidas necessárias.</p>
+    <p data-sem-suporte hidden>Não responda, não passe nenhum dado e <strong>bloqueie o número no seu WhatsApp</strong>.</p>
+    <p data-com-suporte><a class="botao botao--claro" data-suporte href="#" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-chat-circle"/></svg><span>Falar com o suporte</span></a></p>
+  </section>
+</main>
+
+<footer class="rodape"><span>@agathasa</span><span>@asfitcomunidade</span></footer>
+
+<div class="resultado" id="resultado" hidden>
+  <div class="resultado__fundo" data-fechar></div>
+  <div class="resultado__caixa" role="dialog" aria-modal="true" aria-labelledby="resultado-titulo" aria-describedby="resultado-texto">
+    <button class="resultado__fechar" type="button" data-fechar aria-label="Fechar"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <svg class="resultado__icone" aria-hidden="true"><use href="#f-check-circle"/></svg>
+    <h2 id="resultado-titulo">Número verificado</h2>
+    <p id="resultado-texto">Esse número pertence à nossa equipe.</p>
+    <p class="resultado__numero" data-numero></p>
+    <a class="botao" data-suporte data-resultado-suporte href="#" target="_blank" rel="noopener" hidden><svg class="ic" aria-hidden="true"><use href="#i-chat-circle"/></svg><span>Falar com o suporte</span></a>
+  </div>
+</div>
+
+<!-- A lista de números e o WhatsApp do suporte ficam neste arquivo, pra trocar sem mexer aqui -->
+<script src="numeros-oficiais.js"></script>
+<script>
+(function () {
+  'use strict';
+  var lista = window.NUMEROS_OFICIAIS || [];
+  var suporte = String(window.NUMERO_DO_SUPORTE || '').replace(/\D/g, '');
+  var recado = window.MENSAGEM_PRO_SUPORTE || '';
+
+  // Chave de comparação: DDD + os 8 últimos dígitos. Assim o mesmo celular bate com ou sem +55
+  // e com ou sem o 9 da frente (o WhatsApp mostra alguns números antigos sem ele).
+  function digitos(texto) {
+    var d = String(texto).replace(/\D/g, '');
+    if (d.length > 11 && d.indexOf('55') === 0) d = d.slice(2);
+    return d.replace(/^0+/, '');
+  }
+  function chave(texto) {
+    var d = digitos(texto);
+    if (d.length === 11 && d.charAt(2) === '9') d = d.slice(0, 2) + d.slice(3);
+    return d;
+  }
+  var oficiais = {};
+  lista.forEach(function (n) { var c = chave(n); if (c.length === 10) oficiais[c] = true; });
+  var temLista = Object.keys(oficiais).length > 0;
+
+  var form = document.querySelector('.verificar');
+  var campo = document.getElementById('numero');
+  var erro = document.getElementById('erro');
+  var caixa = document.getElementById('resultado');
+  var ultimoFoco = null;
+
+  // Suporte: com número, os botões abrem o WhatsApp; sem, somem e a página só manda bloquear
+  var linkSuporte = suporte ? 'https://wa.me/' + suporte + (recado ? '?text=' + encodeURIComponent(recado) : '') : '';
+  document.querySelectorAll('[data-suporte]').forEach(function (a) { if (linkSuporte) a.href = linkSuporte; });
+  if (!linkSuporte) {
+    document.querySelectorAll('[data-com-suporte]').forEach(function (el) { el.hidden = true; });
+    document.querySelector('[data-sem-suporte]').hidden = false;
+  }
+
+  // Formata enquanto digita: (21) 99999-9999
+  function formatar(d) {
+    if (d.length <= 2) return d.length ? '(' + d : '';
+    var ddd = d.slice(0, 2), resto = d.slice(2);
+    if (resto.length > 8) return '(' + ddd + ') ' + resto.slice(0, 5) + '-' + resto.slice(5, 9);
+    if (resto.length > 4) return '(' + ddd + ') ' + resto.slice(0, 4) + '-' + resto.slice(4);
+    return '(' + ddd + ') ' + resto;
+  }
+  campo.addEventListener('input', function () {
+    campo.value = formatar(digitos(campo.value).slice(0, 11));
+    if (erro.textContent) { erro.textContent = ''; campo.removeAttribute('aria-invalid'); }
+  });
+
+  var TEXTOS = {
+    ok: ['f-check-circle', 'Número verificado', 'Esse número pertence à nossa equipe.'],
+    nao: ['f-x-circle', 'Número não verificado', 'Esse número não pertence à nossa equipe.'],
+    lista: ['f-warning-circle', 'Lista em atualização', 'A lista de números oficiais está sendo atualizada. Até lá, não passe nenhum dado por mensagem.']
+  };
+  function mostrar(estado, numero) {
+    var t = TEXTOS[estado];
+    caixa.setAttribute('data-estado', estado);
+    caixa.querySelector('.resultado__icone use').setAttribute('href', '#' + t[0]);
+    document.getElementById('resultado-titulo').textContent = t[1];
+    document.getElementById('resultado-texto').textContent = t[2];
+    caixa.querySelector('[data-numero]').textContent = numero;
+    caixa.querySelector('[data-resultado-suporte]').hidden = !(linkSuporte && estado !== 'ok');
+    ultimoFoco = document.activeElement;
+    caixa.hidden = false;
+    caixa.querySelector('.resultado__fechar').focus();
+  }
+  function fechar() {
+    if (caixa.hidden) return;
+    caixa.hidden = true;
+    if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
+  }
+  caixa.querySelectorAll('[data-fechar]').forEach(function (b) { b.addEventListener('click', fechar); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fechar(); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = digitos(campo.value);
+    if (d.length < 10 || d.length > 11) {
+      erro.textContent = d.length ? 'Confere o número: ele precisa ter o DDD, mô.' : 'Cole ou digite o número que falou com você.';
+      campo.setAttribute('aria-invalid', 'true');
+      campo.focus();
+      return;
+    }
+    var numero = formatar(d);
+    if (!temLista) return mostrar('lista', numero);
+    mostrar(oficiais[chave(d)] ? 'ok' : 'nao', numero);
+  });
+})();
+</script>
+</body>
+</html>
