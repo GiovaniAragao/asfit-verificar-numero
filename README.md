@@ -29,7 +29,7 @@ Site estático, sem build: `index.html`, `numeros-oficiais.js`, `fonts/`, `img/`
 Na Netlify, arrastar a pasta ou ligar este repositório (pasta de publicação = raiz, sem comando de build).
 O `_headers` deixa a página fora do Google e faz o `numeros-oficiais.js` nunca ficar velho no cache.
 
-Prévia (lista vazia): https://verificar-asfit.pages.dev
+Prévia: https://verificar-asfit.pages.dev (com os números oficiais de 14/10/2026)
 
 ## Conferir depois de pôr os números
 

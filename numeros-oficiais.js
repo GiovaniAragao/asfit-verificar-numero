@@ -9,7 +9,8 @@
 // Depois de mudar, publicar a página de novo.
 
 window.NUMEROS_OFICIAIS = [
-  // '(21) 99999-9999',
+  '+55 11 98815-6419',   // 14/10/2026, passado pelo Giovani
+  '+55 11 94586-0302',   // 14/10/2026, passado pelo Giovani
 ];
 
 // WhatsApp do suporte, que abre no botão "Falar com o suporte". Com 55 e DDD, só os números.
